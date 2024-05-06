@@ -1,30 +1,9 @@
 import mlflow
-import numpy as np
-from sklearn import datasets, metrics
-from sklearn.linear_model import ElasticNet
-from sklearn.model_selection import train_test_split
 
+remote_sever_uri = 'https://dagshub.com/Felix-Sam/'
+mlflow.set_tracking_uri(remote_sever_uri)
 
-def eval_metrics(pred, actual):
-    rmse = np.sqrt(metrics.mean_squared_error(actual, pred))
-    mae = metrics.mean_absolute_error(actual, pred)
-    r2 = metrics.r2_score(actual, pred)
-    return rmse, mae, r2
-
-
-# Set th experiment name
-mlflow.set_experiment("wine-quality")
-
-# Enable auto-logging to MLflow
-mlflow.sklearn.autolog()
-
-# Load wine quality dataset
-X, y = datasets.load_wine(return_X_y=True)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
-
-# Start a run and train a model
-with mlflow.start_run(run_name="hyperparameter_tuning3"):
-    lr = ElasticNet(alpha=0.6,l1_ratio=0.4)
-    lr.fit(X_train, y_train)
-    y_pred = lr.predict(X_test)
-    metrics = eval_metrics(y_pred, y_test)
+mlflow.set_experiment("/my-experiment")
+with mlflow.start_run():
+    mlflow.log_param("a", 1)
+    mlflow.log_metric("b", 2)
